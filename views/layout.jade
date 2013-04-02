@@ -1,0 +1,40 @@
+doctype 5
+html
+	head
+		script(src="/socket.io/socket.io.js")
+		script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script
+			$(document).ready(function() {
+				var socket = io.connect();
+
+				//- socket.on('news', function (data) {
+				//- 	$('#data').html(data.hello);
+				//- });
+
+				$('input').keyup(function(){
+					socket.emit('verify', {value: $('#email').val()});
+				})
+
+				socket.on('verifyResponse', function(data){
+					$('#message').html(data.morphed);
+				})
+			});
+
+	body
+		form(action='/email', method='post')
+			div 
+				| Enter some email address: 
+				input(type='email', id="email")
+			br
+			div
+				| Enter a valid number:
+				input(type='text', id="number")
+			br
+			//- input(type='submit', value="submit")
+		div
+			span Error/success message: 
+			span(id="message") Form is pristine.
+		span(id="data")
+		block content
