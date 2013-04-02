@@ -7,5 +7,5 @@ In Dev, not for consumption
 
 List of improvements/requirements:
 - remove jquery dependancy
-- add functionality for multiple submission scenarios (i.e. enter key, button click, etc.)
 - package for npm submission
+- create multiple methods of display success/errors
