@@ -40,17 +40,19 @@ server.listen(app.get('port'), function(){
 var io = require("socket.io").listen(server)
 
 io.sockets.on('connection', function (socket) {
-  // socket.emit('news', { hello: 'world' });
-
-  socket.on('verify', function(data){
-    try {
-      check(data.value).len(2, 64).isEmail();
-      socket.volatile.emit('verifyResponse', {morphed: 'success'} )
-    } catch (e) {
-      if(e.message!==null){
-        socket.volatile.emit('verifyResponse', {morphed: e.message} )
-      }
-    }
-  });
   
+  socket.on('initialization', function(names){
+    for (i=0; i<names.length; i++){
+      socket.on(names[i], function(data){
+        try {
+          eval(data.fn);
+          socket.volatile.emit(data.name + 'Response', {res: data.successMessage} )
+        } catch (e) {
+          if(e.message!==null){
+            socket.volatile.emit(data.name+ 'Response', {res: e.message} )
+          }
+        }
+      });
+    }
+  })
 });

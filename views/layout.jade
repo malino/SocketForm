@@ -9,17 +9,39 @@ html
 			$(document).ready(function() {
 				var socket = io.connect();
 
-				//- socket.on('news', function (data) {
-				//- 	$('#data').html(data.hello);
-				//- });
+				//collect all input field names
+				var inputFieldNames = ['email', 'number'];
+				//send to server for dynmaic creation
+				socket.emit('initialization', inputFieldNames);
 
-				$('input').keyup(function(){
-					socket.emit('verify', {value: $('#email').val()});
+				$('#number').keyup(function(){
+					socket.emit('number', 
+						{
+							name: "number", 
+							fn:"check("+$('#number').val()+").isNumeric()", 
+							successMessage: "its a number"
+						}
+					);
 				})
 
-				socket.on('verifyResponse', function(data){
-					$('#message').html(data.morphed);
+				$('#email').keyup(function(){
+					socket.emit('email', 
+						{
+							name: 'email',
+							fn: "check("+$('#email').val()+").len(2,64).isEmail()",
+							successMessage: "it an email"
+						}
+					);
 				})
+
+				socket.on('emailResponse', function(data){
+					$('#emailResponse').html('<div>' + data.res + '</div>');
+				})
+
+				socket.on('numberResponse', function(data){
+					$('#numberResponse').html('<div>' + data.res + '</div>');
+				})
+
 			});
 
 	body
@@ -34,7 +56,9 @@ html
 			br
 			//- input(type='submit', value="submit")
 		div
-			span Error/success message: 
-			span(id="message") Form is pristine.
+			span Error/success message:
+			br
+			span#emailResponse
+			span#numberResponse
 		span(id="data")
 		block content

@@ -12,6 +12,7 @@ form input[type='submit'] {
   height: 50px;
   width: 50px;
 }
-#message {
+#emailResponse,
+#numberResponse {
   color: #f00;
 }
